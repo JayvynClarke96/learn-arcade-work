@@ -112,20 +112,17 @@ class MyGame(arcade.Window):
 
         #Adding Coins
 
-        coinlist = [[105,200],
-                    [235,200]]
+        coin_position = [[105, 460],
+                         ]
 
-        for coin in coinlist:
+        for coin_position in coin_position:
             coin = arcade.Sprite(":resources:images/items/gemBlue.png", SPRITE_SCALING)
-            coin.center_x = coin
-            coin.center_y = coin
+            coin.center_x, coin.center_y = coin_position
             self.coin_list.append(coin)
 
-
-
-
         self.physics_engine = arcade.PhysicsEngineSimple(self.player_sprite,
-                                                         self.wall_list)
+                                                         self.wall_list,
+                                                         )
 
         # Set the background color
         arcade.set_background_color(arcade.color.AMAZON)
@@ -141,6 +138,7 @@ class MyGame(arcade.Window):
         # Draw all the sprites.
         self.wall_list.draw()
         self.player_list.draw()
+        self.coin_list.draw()
 
     def on_key_press(self, key, modifiers):
         """Called whenever a key is pressed. """
