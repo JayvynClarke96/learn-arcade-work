@@ -29,6 +29,12 @@ class MyGame(arcade.Window):
         """
         super().__init__(width, height, title)
 
+        #Score
+        self.score = 0
+
+        # Sound when picking up coin
+        self.pickup_sound = arcade.load_sound("Picked Coin Echo 2.wav")
+
         # Sprite lists
         self.coin_list = None
         self.wall_list = None
@@ -45,6 +51,9 @@ class MyGame(arcade.Window):
         self.player_list = arcade.SpriteList()
         self.wall_list = arcade.SpriteList()
         self.coin_list = arcade.SpriteList()
+
+        #Score
+        self.score = 0
 
         # Set up the player
         self.player_sprite = arcade.Sprite(":resources:images/animated_characters/zombie/zombie_idle.png",
@@ -112,8 +121,33 @@ class MyGame(arcade.Window):
 
         #Adding Coins
 
-        coin_position = [[105, 460],
-                         ]
+        coin_position = [[105, 395],
+                         [235, 395],
+                         [365, 395],
+                         [495, 395],
+                         [625, 200],
+                         [625, 265],
+                         [625, 330],
+                         [625, 395],
+                         [625, 460],
+                         [690, 200],
+                         [690, 265],
+                         [690, 330],
+                         [690, 395],
+                         [690, 460],
+                         [690, 525],
+                         [625, 525],
+                         [560, 525],
+                         [495, 525],
+                         [430, 525],
+                         [365, 525],
+                         [300, 525],
+                         [235, 525],
+                         [170, 525],
+                         [105, 525],
+                         [40, 525]]
+
+
 
         for coin_position in coin_position:
             coin = arcade.Sprite(":resources:images/items/gemBlue.png", SPRITE_SCALING)
@@ -140,6 +174,11 @@ class MyGame(arcade.Window):
         self.player_list.draw()
         self.coin_list.draw()
 
+        #Drawing the score
+
+        gems_collected = f"Score: {self.score}"
+        arcade.draw_text(gems_collected,10,20, arcade.color.WHITE,20)
+
     def on_key_press(self, key, modifiers):
         """Called whenever a key is pressed. """
 
@@ -151,6 +190,8 @@ class MyGame(arcade.Window):
             self.player_sprite.change_x = -MOVEMENT_SPEED
         elif key == arcade.key.RIGHT:
             self.player_sprite.change_x = MOVEMENT_SPEED
+
+
 
     def on_key_release(self, key, modifiers):
         """Called when the user releases a key. """
@@ -166,6 +207,18 @@ class MyGame(arcade.Window):
         # Call update on all sprites (The sprites don't do much in this
         # example though.)
         self.physics_engine.update()
+
+        # Check for collisions with gems
+        gem_hit_list = arcade.check_for_collision_with_list(self.player_sprite, self.coin_list)
+
+        # Iterate through the coins that were hit
+        for gem in gem_hit_list:
+            # Play the sound when picking up the coin
+            arcade.play_sound(self.pickup_sound)
+            # Increase the score
+            self.score += 1
+            # Remove the collected gem
+            gem.remove_from_sprite_lists()
 
 
 def main():
