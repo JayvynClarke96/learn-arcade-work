@@ -34,11 +34,7 @@ def main():
                     break;
 
             if not found:
-                print("possible misspelling: ", word, " at line ", line_number)
-        #    if uppercase_word in dictionary_list:
-        #        print("{word}")
-        #    else:
-        #        print("Not found in dictionary")
+                print("Line", line_number, "possible misspelled word:", word)
 
         line_number += 1
 
@@ -47,33 +43,34 @@ def main():
     print("---Binary Search---")
     my_file = open("AliceInWonderLand200.txt")
     line_number = 1
-    start = 0
-    end = len(dictionary_list) - 1
-    found = False
 
-    while start <= end and not found:
-        middle = (end + start) // 2
+    for line in my_file:
+        line = line.strip()
+        word_list = split_line(line)
 
-        if dictionary_list[middle] < word:
-            end = middle + 1
-        elif dictionary_list[middle] > word:
-            start = middle - 1
-        else:
-            found = True
+        for word in word_list:
+            found = False
+            word_upper = word.upper()
+            start = 0
+            end = len(dictionary_list) - 1
 
-    if not found:
-        print("possible misspelling: ", word, "at line", line_number)
+            while start <= end and not found:
+                middle = (end + start) // 2
+                key = dictionary_list[middle]
+
+                if key < word_upper:
+                    start = middle + 1
+                elif key > word_upper:
+                    end = middle - 1
+                else:
+                    found = True
+                    break
+
+            if not found:
+                print("Line", line_number, "possible misspelled word:", word)
+
+        line_number += 1
+
     my_file.close()
 
 main()
-
-#  while start <= end:
-#     mid = (start + end) // 2
-#     mid_word = dictionary_list[mid]
-
-#    if mid_word == word:
-#        found = True
-#    elif mid_word < word:
-#         start = mid + 1
-#     else:
-#         end = mid - 1
