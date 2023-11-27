@@ -13,6 +13,31 @@ SCREEN_WIDTH = 800
 SCREEN_HEIGHT = 600
 MOVEMENT_SPEED = 5
 
+class Gems(arcade.Sprite):
+    def __init__(self, filename, sprite_scaling):
+
+        super().__init__(filename, sprite_scaling)
+
+        self.change_x = 0
+        self.change_y = 0
+
+    def on_update(self):
+        # Move the gems
+        self.center_x += self.change_x
+        self.center_y += self.change_y
+
+        if self.left < 0:
+            self.change_x *= -1
+
+        if self.right > SCREEN_WIDTH:
+            self.change_x *= -1
+
+        if self.bottom < 0:
+            self.change_y *= -1
+
+        if self.top > SCREEN_HEIGHT:
+            self.change_y *= -1
+
 
 class MyGame(arcade.Window):
     """ Our custom Window Class"""
@@ -52,21 +77,22 @@ class MyGame(arcade.Window):
 
         # Drawing Good Sprite
         for i in range(GEM_COUNT):
-            gem = arcade.Sprite(":resources:images/items/gemBlue.png",SPRITE_SCALING_COIN)
+            gem = arcade.Sprite(":resources:images/items/gemBlue.png", SPRITE_SCALING_COIN)
             gem.center_x = random.randrange(SCREEN_WIDTH)
             gem.center_y = random.randrange(SCREEN_HEIGHT)
+            gem.change_x = random.randrange(-3, 4)
+            gem.change_y = random.randrange(-3, 4)
             self.good_sprites_list.append(gem)
 
         # Drawing Bad Sprite
         for e in range(BEE_COUNT):
-            bee = arcade.Sprite(":resources:images/enemies/bee.png",SPRITE_SCALING_COIN)
+            bee = arcade.Sprite(":resources:images/enemies/bee.png", SPRITE_SCALING_COIN)
             bee.center_x = random.randrange(SCREEN_WIDTH)
             bee.center_y = random.randrange(SCREEN_HEIGHT)
             self.bad_sprites_list.append(bee)
 
         self.physics_engine = arcade.PhysicsEngineSimple(self.player_sprite,
-                                                         self.good_sprites_list,
-                                                         self.bad_sprites_list)
+                                                         self.good_sprites_list)
 
         # Background color
         arcade.set_background_color(arcade.color.BLUEBERRY)
