@@ -5,60 +5,46 @@ import arcade
 # --- Constants ---
 SCREEN_WIDTH = 800
 SCREEN_HEIGHT = 600
-MOVEMENT_SPEED = 3
 
-def draw_grass():
-    # Ground
-    arcade.draw_lrtb_rectangle_filled(0, SCREEN_WIDTH, SCREEN_HEIGHT / 3,0, arcade.color.AIR_SUPERIORITY_BLUE)
+MOVEMENT_SPEED = 5
 
-def draw_snow_person(x, y):
-
-    arcade.draw_point(x, y, arcade.color.RED,5)
-    # Snow
-    arcade.draw_circle_filled(x, 60 + y, 60, arcade.color.WHITE)
-    arcade.draw_circle_filled(x, 140 + y, 50, arcade.color.WHITE)
-    arcade.draw_circle_filled(x, 200 + y, 40, arcade.color.WHITE)
-
-
-    # Eyes
-    arcade.draw_circle_filled(x - 15, 210 + y, 5, arcade.color.BLACK)
-    arcade.draw_circle_filled(x + 15, 210 + y, 5, arcade.color.BLACK)
-
-def on_draw(delta_time):
-    arcade.start_render()
-
-    draw_grass()
-    draw_snow_person(on_draw.snow_person1_x, 140)
-    draw_snow_person(on_draw.snow_person2_x, 140)
-    draw_snow_person(on_draw.snow_person3_x, y=140)
-
-    on_draw.snow_person1_x += 1
-    on_draw.snow_person2_x += 1
-    on_draw.snow_person3_x += 1
-
-on_draw.snow_person1_x = 150
-on_draw.snow_person2_x = 350
-on_draw.snow_person3_x = 500
 
 class Ball:
-    def __init__(self, position_x, position_y, change_x, change_y, radius, color):
+    def __init__(self, position_x, position_y, radius, color):
         self.position_x = position_x
         self.position_y = position_y
-        self.change_x = change_x
-        self.change_y = change_y
         self.radius = radius
         self.color = color
 
-    def draw(self):
-        arcade.draw_ellipse_filled(self.position_x,
+    def on_draw(self):
+        arcade.draw_circle_filled(self.position_x,
                                   self.position_y,
                                   self.radius,
                                   self.color)
 
+
+class Block:
+
+    def __init__(self, center_x, center_y, color, height, width):
+        self.center_x = center_x
+        self.center_y = center_y
+        self.height = height
+        self.color = color
+        self.width = width
+        self.change_x = 0
+        self.change_y = 0
+
+    def draw(self):
+        arcade.draw_rectangle_filled(self.center_x,
+                                     self.center_y,
+                                     self.width,
+                                     self.height,
+                                     self.color)
+
     def update(self):
-        # Move the ball
-        self.position_y += self.change_y
-        self.position_x += self.change_x
+        self.center_x += self.change_x
+        self.center_y += self.change_y
+
 
 class MyGame(arcade.Window):
     """ Our Custom Window Class"""
@@ -71,30 +57,56 @@ class MyGame(arcade.Window):
 
         self.set_mouse_visible(False)
 
-        self.ball = Ball(50, 50, 15, arcade.color.AUBURN)
+        self.ball_sound = arcade.load_sound("712628__robinhood76__12287-oriental-magic-transformation.wav")
+        self.block_sound = arcade.load_sound("712560__shangasdfguy123__scpsea-scp-xqy18-blowing.wav")
 
+        self.block_list = None
+
+        # Background Color
+        arcade.set_background_color(arcade.color.BABY_PINK)
+
+        self.ball = Ball(50, 50, 5, arcade.color.RED)
+        self.block = Block(30, 30, arcade.color.RED, 5, 10)
 
     def on_draw(self):
         arcade.start_render()
-        self.ball.draw()
+        self.ball.on_draw()
+        self.block.draw()
 
-        draw_grass()
-        draw_snow_person(on_draw.snow_person1_x, 140)
-        draw_snow_person(on_draw.snow_person2_x, 140)
-        draw_snow_person(on_draw.snow_person3_x, y=140)
+    def on_update(self, delta_time):
+        self.block.update()
 
-        on_draw.snow_person1_x += 1
-        on_draw.snow_person2_x += 1
-        on_draw.snow_person3_x += 1
-
-    def on_mouse_motion(self, x, y, dx, dy):
-        """ Called to update our objects.
-        Happens approximately 60 times per second."""
+    def on_mouse_motion(self, x: int, y: int, dx: int, dy: int):
         self.ball.position_x = x
         self.ball.position_y = y
 
+    def on_mouse_press(self, x: int, y: int, button: int, modifiers: int):
+        arcade.play_sound(self.ball_sound)
 
+    def on_key_press(self, key, modifiers):
+        """Called whenever a key is pressed. """
 
+        if key == arcade.key.UP:
+            self.block.change_y = MOVEMENT_SPEED
+        elif key == arcade.key.DOWN:
+            self.block.change_y = -MOVEMENT_SPEED
+        elif key == arcade.key.LEFT:
+            self.block.change_x = -MOVEMENT_SPEED
+        elif key == arcade.key.RIGHT:
+            self.block.change_x = MOVEMENT_SPEED
+
+        if self.block.change_x < SCREEN_WIDTH:
+            arcade.play_sound(self.block_sound)
+        if self.block.change_y < SCREEN_HEIGHT:
+            arcade.play_sound(self.block_sound)
+
+    def on_key_release(self, key, modifiers):
+        """Called when the user releases a key. """
+
+        if key == arcade.key.UP or key == arcade.key.DOWN:
+            self.block.change_y = 0
+        elif key == arcade.key.LEFT or key == arcade.key.RIGHT:
+            self.block.change_x = 0
 
 def main():
     window = MyGame()
