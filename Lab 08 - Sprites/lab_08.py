@@ -13,6 +13,7 @@ SCREEN_WIDTH = 800
 SCREEN_HEIGHT = 600
 MOVEMENT_SPEED = 5
 
+
 class Gems(arcade.Sprite):
     def __init__(self, filename, sprite_scaling):
 
@@ -21,7 +22,7 @@ class Gems(arcade.Sprite):
         self.change_x = 0
         self.change_y = 0
 
-    def on_update(self):
+    def update(self):
         # Move the gems
         self.center_x += self.change_x
         self.center_y += self.change_y
@@ -70,7 +71,8 @@ class MyGame(arcade.Window):
         self.bad_sprites_list = arcade.SpriteList()
 
         # Drawing My player
-        self.player_sprite = arcade.Sprite(":resources:images/animated_characters/male_person/malePerson_idle.png", SPRITE_SCALING_PLAYER)
+        self.player_sprite = arcade.Sprite(":resources:images/animated_characters/male_person/malePerson_idle.png",
+                                           SPRITE_SCALING_PLAYER)
         self.player_sprite.center_x = 50
         self.player_sprite.center_y = 60
         self.player_list.append(self.player_sprite)
@@ -80,8 +82,6 @@ class MyGame(arcade.Window):
             gem = arcade.Sprite(":resources:images/items/gemBlue.png", SPRITE_SCALING_COIN)
             gem.center_x = random.randrange(SCREEN_WIDTH)
             gem.center_y = random.randrange(SCREEN_HEIGHT)
-            gem.change_x = random.randrange(-3, 4)
-            gem.change_y = random.randrange(-3, 4)
             self.good_sprites_list.append(gem)
 
         # Drawing Bad Sprite
@@ -90,9 +90,6 @@ class MyGame(arcade.Window):
             bee.center_x = random.randrange(SCREEN_WIDTH)
             bee.center_y = random.randrange(SCREEN_HEIGHT)
             self.bad_sprites_list.append(bee)
-
-        self.physics_engine = arcade.PhysicsEngineSimple(self.player_sprite,
-                                                         self.good_sprites_list)
 
         # Background color
         arcade.set_background_color(arcade.color.BLUEBERRY)
@@ -107,7 +104,7 @@ class MyGame(arcade.Window):
 
         # Drawing the Score
         gems_collected = f"Score: {self.score}"
-        arcade.draw_text(gems_collected,10,20, arcade.color.WHITE,20)
+        arcade.draw_text(gems_collected, 10, 20, arcade.color.WHITE, 20)
 
     def on_key_press(self, key, modifiers):
         """Called whenever a key is pressed. """
@@ -122,7 +119,6 @@ class MyGame(arcade.Window):
             self.player_sprite.change_x = MOVEMENT_SPEED
 
     def on_key_release(self, key, modifiers):
-        """Called when the user releases a key. """
 
         if key == arcade.key.UP or key == arcade.key.DOWN:
             self.player_sprite.change_y = 0
@@ -130,8 +126,15 @@ class MyGame(arcade.Window):
             self.player_sprite.change_x = 0
 
     def on_update(self, delta_time):
+        for good in self.good_sprites_list:
+            good.center_x += 3
+            if good.center_x > SCREEN_WIDTH:
+                good.center_x = 0
 
-        self.physics_engine.update()
+        for bad in self.bad_sprites_list:
+            bad.center_x -= 3
+            if bad.center_x < 0:
+                bad.center_x = SCREEN_WIDTH
 
         good_hit_list = arcade.check_for_collision_with_list(self.player_sprite, self.good_sprites_list)
         bad_hit_list = arcade.check_for_collision_with_list(self.player_sprite, self.bad_sprites_list)
@@ -144,8 +147,11 @@ class MyGame(arcade.Window):
             self.score -= 1
             bad_sprite.remove_from_sprite_lists()
 
+        self.player_list.update()
+
+
 def main():
-    """ Main method """
+
     window = MyGame()
     window.setup()
     arcade.run()
@@ -153,4 +159,3 @@ def main():
 
 if __name__ == "__main__":
     main()
-
