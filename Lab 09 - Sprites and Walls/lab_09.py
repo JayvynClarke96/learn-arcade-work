@@ -29,7 +29,7 @@ class MyGame(arcade.Window):
         """
         super().__init__(width, height, title)
 
-        #Score
+        # Score
         self.score = 0
 
         # Sound when picking up coin
