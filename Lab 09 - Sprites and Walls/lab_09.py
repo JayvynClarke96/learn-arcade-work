@@ -52,7 +52,7 @@ class MyGame(arcade.Window):
         self.wall_list = arcade.SpriteList()
         self.coin_list = arcade.SpriteList()
 
-        #Score
+        # Score
         self.score = 0
 
         # Set up the player
@@ -64,35 +64,35 @@ class MyGame(arcade.Window):
 
         # -- Set up the walls
         # Column 1
-        for Column1 in range (200,460,65):
+        for Column1 in range(200, 460, 65):
             wall = arcade.Sprite(":resources:images/tiles/grassCenter.png", SPRITE_SCALING)
             wall.center_x = 40
             wall.center_y = Column1
             self.wall_list.append(wall)
 
         # Column 2
-        for Column2 in range (200,460,65):
+        for Column2 in range(200, 460, 65):
             wall = arcade.Sprite(":resources:images/tiles/grassCenter.png", SPRITE_SCALING)
             wall.center_x = 170
             wall.center_y = Column2
             self.wall_list.append(wall)
 
         # Column 3
-        for Column3 in range (200,460,65):
+        for Column3 in range(200, 460, 65):
             wall = arcade.Sprite(":resources:images/tiles/grassCenter.png", SPRITE_SCALING)
             wall.center_x = 300
             wall.center_y = Column3
             self.wall_list.append(wall)
 
         # Column 4
-        for Column4 in range (200,460,65):
+        for Column4 in range(200, 460, 65):
             wall = arcade.Sprite(":resources:images/tiles/grassCenter.png", SPRITE_SCALING)
             wall.center_x = 430
             wall.center_y = Column4
             self.wall_list.append(wall)
 
         # Column 5
-        for Column5 in range (200,460,65):
+        for Column5 in range(200, 460, 65):
             wall = arcade.Sprite(":resources:images/tiles/grassCenter.png", SPRITE_SCALING)
             wall.center_x = 560
             wall.center_y = Column5
@@ -100,26 +100,26 @@ class MyGame(arcade.Window):
 
         # Top row
 
-        for toprow in range(40,625,65):
+        for toprow in range(40, 625, 65):
             wall = arcade.Sprite(":resources:images/tiles/brickBrown.png", SPRITE_SCALING)
             wall.center_x = toprow
             wall.center_y = 460
             self.wall_list.append(wall)
 
         # Borders
-        for border1 in range(0,820,65):
+        for border1 in range(0, 820, 65):
             wall = arcade.Sprite(":resources:images/tiles/brickTextureWhite.png", SPRITE_SCALING)
             wall.center_x = border1
             wall.center_y = 590
             self.wall_list.append(wall)
 
-        for border2 in range(0,655,65):
+        for border2 in range(0, 655, 65):
             wall = arcade.Sprite(":resources:images/tiles/brickTextureWhite.png", SPRITE_SCALING)
             wall.center_x = 785
             wall.center_y = border2
             self.wall_list.append(wall)
 
-        #Adding Coins
+        # Adding Coins
 
         coin_position = [[105, 395],
                          [235, 395],
@@ -147,8 +147,6 @@ class MyGame(arcade.Window):
                          [105, 525],
                          [40, 525]]
 
-
-
         for coin_position in coin_position:
             coin = arcade.Sprite(":resources:images/items/gemBlue.png", SPRITE_SCALING)
             coin.center_x, coin.center_y = coin_position
@@ -174,10 +172,10 @@ class MyGame(arcade.Window):
         self.player_list.draw()
         self.coin_list.draw()
 
-        #Drawing the score
+        # Drawing the score
 
         gems_collected = f"Score: {self.score}"
-        arcade.draw_text(gems_collected,10,20, arcade.color.WHITE,20)
+        arcade.draw_text(gems_collected, 10, 20, arcade.color.WHITE, 20)
 
     def on_key_press(self, key, modifiers):
         """Called whenever a key is pressed. """
@@ -190,8 +188,6 @@ class MyGame(arcade.Window):
             self.player_sprite.change_x = -MOVEMENT_SPEED
         elif key == arcade.key.RIGHT:
             self.player_sprite.change_x = MOVEMENT_SPEED
-
-
 
     def on_key_release(self, key, modifiers):
         """Called when the user releases a key. """
