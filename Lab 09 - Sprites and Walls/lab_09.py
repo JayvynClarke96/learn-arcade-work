@@ -33,7 +33,7 @@ class MyGame(arcade.Window):
         self.score = 0
 
         # Sound when picking up coin
-        self.pickup_sound = arcade.load_sound("Picked Coin Echo 2.wav")
+        self.pickup_sound = arcade.load_sound("220171__gameaudio__flourish-spacey-1.wav")
 
         # Sprite lists
         self.coin_list = None
